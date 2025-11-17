@@ -21,5 +21,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Vite::prefetch(concurrency: 3);
+        // Authorization logic should be placed in controllers or policies, not in service providers.
     }
 }
