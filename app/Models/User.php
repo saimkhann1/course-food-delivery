@@ -6,6 +6,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+// use App\Models\RoleName;
+use App\Enums\RoleName;
 
 class User extends Authenticatable
 {
@@ -44,5 +46,41 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function Roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+    public function isAdmin()
+    {
+        return $this->hasRole(RoleName::ADMIN);
+    }
+    public function isVendor()
+    {
+        return $this->hasRole(RoleName::VENDOR);
+    }
+    public function isStaff()
+    {
+        return $this->hasRole(RoleName::STAFF);
+    }
+    public function isCustomer()
+    {
+        return $this->hasRole(RoleName::CUSTOMER);
+    }
+    public function hasRole(RoleName $roleName): bool
+    {
+        return $this->Roles()->where('name', $roleName->value)->exists();
+    }
+    public function permissions()
+    {
+        return $this->Roles()->with('Permissions')->get()->map(function ($role){
+            return $role->Permissions->pluck('name');
+        })
+        ->flatten()->values()->unique()->toArray();
+    }
+    public function hasPermission(string $permissionName): bool
+    {
+        return in_array($permissionName, $this->permissions());
     }
 }
