@@ -10,6 +10,7 @@ defineProps({
 </script>
 
 <template>
+
   <Head title="Restaurants" />
 
   <AuthenticatedLayout>
@@ -21,7 +22,11 @@ defineProps({
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
           <div class="p-6 text-gray-900 overflow-x-scroll">
-            
+            <div class="p-6">
+              <Link class="btn btn-primary" :href="route('admin.restaurants.create')">
+              Add New Restaurant
+              </Link>
+            </div>
             <table class="table">
               <thead>
                 <tr>
@@ -50,7 +55,8 @@ defineProps({
                 </tr>
               </tbody>
             </table>
-            </div>
+
+          </div>
         </div>
       </div>
     </div>
