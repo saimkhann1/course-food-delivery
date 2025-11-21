@@ -25,6 +25,6 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
-
-// Humari nayi Admin routes file yahan include ho rahi hai
 require __DIR__.'/admin.php';
+require __DIR__.'/vendor.php';
+

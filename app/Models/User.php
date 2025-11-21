@@ -48,7 +48,11 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-
+    
+    public function restaurant(): HasOne
+    {
+        return $this->hasOne(Restaurant::class, 'owner_id');
+    }
     public function Roles()
     {
         return $this->belongsToMany(Role::class);
@@ -83,9 +87,5 @@ class User extends Authenticatable
     public function hasPermission(string $permissionName): bool
     {
         return in_array($permissionName, $this->permissions());
-    }
-    public function restaurant(): HasOne
-    {
-        return $this->hasOne(Restaurant::class, 'owner_id');
     }
 }
