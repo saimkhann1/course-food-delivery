@@ -23,7 +23,7 @@ defineProps({
           <div class="p-6 text-gray-900">
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-x-4 gap-y-8">
               <div v-for="restaurant in restaurants" :key="restaurant.id">
-                <Link href="#" class="flex flex-col gap-2">
+                <Link :href="route('restaurant', restaurant)" class="flex flex-col gap-2">
                   <div>
                     <img
                       class="w-full aspect-video rounded-xl"
