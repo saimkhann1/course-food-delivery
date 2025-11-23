@@ -1,24 +1,38 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
-import { Head } from '@inertiajs/vue3'
- 
+import { Head, usePage, useForm } from '@inertiajs/vue3'
+const page = usePage()
+const form = useForm({})
+
 defineProps({
   restaurant: {
     type: Object
   }
 })
+const addProduct = (product) => {
+  form.post(route('customer.cart.add', product), {
+    preserveScroll: true,
+    onError: () => {
+      if (confirm(`This will remove your ${page.props.cart.restaurant_name} order.`)) {
+        form.delete(route('customer.cart.destroy'), {
+          onSuccess: () => addProduct(product)
+        })
+      }
+    }
+  })
+}
 </script>
- 
+
 <template>
   <Head :title="restaurant.name" />
- 
+
   <AuthenticatedLayout>
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">
         {{ restaurant.name }}
       </h2>
     </template>
- 
+
     <div class="py-12">
       <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -43,12 +57,17 @@ defineProps({
                     <div class="font-bold">{{ product.name }}</div>
                     <div class="">{{ (product.price / 100).toFixed(2) }} &euro;</div>
                     <div class="grow flex items-end">
-                      <button class="btn btn-primary btn-sm" type="button">
-                        Add {{ (product.price / 100).toFixed(2) }} &euro; (Coming soon)
+                      <button
+                        v-if="can('cart.add') || !$page.props.auth.user"
+                        @click="addProduct(product)"
+                        class="btn btn-primary btn-sm"
+                        type="button"
+                      >
+                        Add {{ (product.price / 100).toFixed(2) }} &euro;
                       </button>
                     </div>
                   </div>
- 
+
                   <div class="flex-none w-48">
                     <img
                       class="w-full aspect-video rounded"

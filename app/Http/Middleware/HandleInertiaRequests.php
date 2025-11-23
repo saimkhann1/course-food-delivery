@@ -36,6 +36,12 @@ class HandleInertiaRequests extends Middleware
                 'permissions' => $request->user()?->permissions() ?? [],
             ],
             'status' => session('status'),
+            'cart'   => session('cart', [
+                'items'           => [],
+                'total'           => 0,
+                'restaurant_name' => '',
+                'restaurant_id'   => '',
+            ]),
         ];
     }
 }

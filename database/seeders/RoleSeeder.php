@@ -18,6 +18,7 @@ class RoleSeeder extends Seeder
     {
         $this->createAdminRole();
         $this->createVendorRole();
+        $this->createCustomerRole();
     }
     protected function createRole(RoleName $roleName, Collection $permissions): void
     {
@@ -28,17 +29,22 @@ class RoleSeeder extends Seeder
     protected function createAdminRole(): void
     {
         $permissions = Permission::query()
-        ->where('name','like','user.%')
-        ->orWhere('name','like','restaurant.%')
-        ->pluck('id');
+            ->where('name', 'like', 'user.%')
+            ->orWhere('name', 'like', 'restaurant.%')
+            ->pluck('id');
         $this->createRole(RoleName::ADMIN, $permissions);
     }
-    protected function createVendorRole(): void{
+    protected function createVendorRole(): void
+    {
         $permissions = Permission::query()
-        ->where('name','like','category.%')
-        ->orWhere('name','like','product.%')
-        ->pluck('id');
+            ->where('name', 'like', 'category.%')
+            ->orWhere('name', 'like', 'product.%')
+            ->pluck('id');
         $this->createRole(RoleName::VENDOR, $permissions);
     }
-
+    public function createCustomerRole(): void
+   {
+        $permissions = Permission::where('name', 'cart.add')->get();
+        $this->createRole(RoleName::CUSTOMER, $permissions);
+  }
 }

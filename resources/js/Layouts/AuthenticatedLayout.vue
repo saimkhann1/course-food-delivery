@@ -24,9 +24,7 @@ const showingNavigationDropdown = ref(false)
               </div>
 
               <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                <NavLink :href="route('home')" :active="route().current('home')">
-                  home
-                </NavLink>
+                <NavLink :href="route('home')" :active="route().current('home')"> home </NavLink>
                 <NavLink
                   v-if="can('restaurant.viewAny')"
                   :href="route('admin.restaurants.index')"
@@ -44,6 +42,9 @@ const showingNavigationDropdown = ref(false)
             </div>
 
             <div v-if="$page.props.auth.user" class="hidden sm:flex sm:items-center sm:ml-6">
+              <Link v-if="can('cart.add')"  :href="route('customer.cart.index')" class="btn btn-primary">
+                View basket {{ ($page.props.cart.total / 100).toFixed(2) }} &euro;
+              </Link>
               <div class="ml-3 relative">
                 <Dropdown align="right" width="48">
                   <template #trigger>
