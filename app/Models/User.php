@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 // use App\Models\RoleName;
 use App\Enums\RoleName;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -48,7 +49,7 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    
+
     public function restaurant(): HasOne
     {
         return $this->hasOne(Restaurant::class, 'owner_id');
@@ -79,13 +80,17 @@ class User extends Authenticatable
     }
     public function permissions()
     {
-        return $this->Roles()->with('Permissions')->get()->map(function ($role){
+        return $this->Roles()->with('Permissions')->get()->map(function ($role) {
             return $role->Permissions->pluck('name');
         })
-        ->flatten()->values()->unique()->toArray();
+            ->flatten()->values()->unique()->toArray();
     }
     public function hasPermission(string $permissionName): bool
     {
         return in_array($permissionName, $this->permissions());
+    }
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class, 'customer_id');
     }
 }

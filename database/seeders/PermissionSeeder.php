@@ -13,7 +13,7 @@ class PermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        $actions =[
+        $actions = [
             'viewAny',
             'view',
             'create',
@@ -27,14 +27,15 @@ class PermissionSeeder extends Seeder
             'restaurant',
             'category',
             'product',
+            'order',
         ];
         collect($resources)
-        ->crossJoin($actions)
-        ->map(function ( $set) {
-            return implode('.', $set);
-        })->each(function ($permission) {
-            Permission::create(['name' => $permission]);
-        });
-        Permission::create(['name' => 'cart.add']); 
+            ->crossJoin($actions)
+            ->map(function ($set) {
+                return implode('.', $set);
+            })->each(function ($permission) {
+                Permission::create(['name' => $permission]);
+            });
+        Permission::create(['name' => 'cart.add']);
     }
 }

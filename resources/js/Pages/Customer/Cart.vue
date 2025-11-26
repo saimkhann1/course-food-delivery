@@ -2,24 +2,29 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 import { Head, useForm } from '@inertiajs/vue3'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
- 
+
 const form = useForm({
   product: {}
 })
- 
+
 const removeProduct = (uuid) => {
   form.post(route('customer.cart.remove', uuid), { preserveScroll: true })
 }
+const order = useForm({})
+
+const placeOrder = () => {
+  order.post(route('customer.orders.store'))
+}
 </script>
- 
+
 <template>
   <Head title="Cart" />
- 
+
   <AuthenticatedLayout>
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">Cart</h2>
     </template>
- 
+
     <div class="py-12">
       <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -60,7 +65,7 @@ const removeProduct = (uuid) => {
               <div>{{ ($page.props.cart.total / 100).toFixed(2) }} &euro;</div>
             </div>
             <div class="mt-4" v-if="$page.props.cart.items.length">
-              <PrimaryButton type="button">Place Order</PrimaryButton>
+              <PrimaryButton type="button" @click="placeOrder">Place Order</PrimaryButton>
             </div>
           </div>
         </div>

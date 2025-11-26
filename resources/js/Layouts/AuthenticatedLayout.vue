@@ -38,11 +38,22 @@ const showingNavigationDropdown = ref(false)
                   :active="route().current('vendor.menu')"
                   >Restaurant menu
                 </NavLink>
+                <NavLink
+                  v-if="can('order.viewAny')"
+                  :href="route('customer.orders.index')"
+                  :active="route().current('customer.orders.index')"
+                >
+                  My Orders
+                </NavLink>
               </div>
             </div>
 
             <div v-if="$page.props.auth.user" class="hidden sm:flex sm:items-center sm:ml-6">
-              <Link v-if="can('cart.add')"  :href="route('customer.cart.index')" class="btn btn-primary">
+              <Link
+                v-if="can('cart.add')"
+                :href="route('customer.cart.index')"
+                class="btn btn-primary"
+              >
                 View basket {{ ($page.props.cart.total / 100).toFixed(2) }} &euro;
               </Link>
               <div class="ml-3 relative">
