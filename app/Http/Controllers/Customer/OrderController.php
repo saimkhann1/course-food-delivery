@@ -12,6 +12,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\NewOrderCreated;
 
 class OrderController extends Controller
 {
@@ -19,12 +20,12 @@ class OrderController extends Controller
     {
         Gate::authorize('order.viewAny');
 
-        $orders = Order::with(['restaurant', 'items']) 
-         ->where('customer_id', Auth::id())
+        $orders = Order::with(['restaurant', 'items'])
+            ->where('customer_id', Auth::id())
             ->latest()
             ->get();
 
-        return Inertia::render('Customer/Orders', [ 
+        return Inertia::render('Customer/Orders', [
             'orders' => $orders,
         ]);
     }
@@ -34,7 +35,7 @@ class OrderController extends Controller
         $user = $request->user();
         $attributes = $request->validated();
 
-        DB::transaction(function () use ($user, $attributes) {
+        $order = DB::transaction(function () use ($user, $attributes) {
             $order = $user->orders()->create([
                 'restaurant_id' => $attributes['restaurant_id'],
                 'total'         => $attributes['total'],
@@ -42,7 +43,10 @@ class OrderController extends Controller
             ]);
 
             $order->items()->createMany($attributes['items']);
+            return $order;
         });
+
+        $order->restaurant->owner->notify(new NewOrderCreated($order));
 
         session()->forget('cart');
 
