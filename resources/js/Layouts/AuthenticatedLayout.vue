@@ -41,9 +41,15 @@ const showingNavigationDropdown = ref(false)
                 <NavLink
                   v-if="can('order.viewAny')"
                   :href="route('customer.orders.index')"
-                  :active="route().current('customer.orders.index')"
-                >
+                  :active="route().current('customer.orders.index')">
                   My Orders
+                </NavLink>
+                <NavLink
+                  v-if="can('user.create') && $page.props.auth.is_vendor"
+                  :href="route('vendor.staff-members.index')"
+                  :active="route().current('vendor.staff-members.index')"
+                >
+                  Staff Management
                 </NavLink>
               </div>
             </div>
